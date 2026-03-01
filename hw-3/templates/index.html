@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuoteVault</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>QuoteVault</h1>
+            <button onclick="showAddForm()" class="btn btn-primary">+ Add Quote</button>
+        </header>
+
+        <div id="toast-container"></div>
+
+        <div class="quote-grid">
+            {% if quotes %}
+                {% for quote in quotes %}
+                <div class="quote-card" id="card-{{ quote.id }}">
+                    <p class="quote-text">"{{ quote.text }}"</p>
+                    <p class="quote-author">— {{ quote.author }}</p>
+                    <p class="quote-category">{{ quote.category }}</p>
+                    {% if quote.tags %}
+                    <div class="tags">
+                        {% for tag in quote.tags %}<span class="tag">#{{ tag }}</span>{% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="actions">
+                        <button onclick="editQuote('{{ quote.id }}')" class="btn-icon edit"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteQuote('{{ quote.id }}', this)" class="btn-icon delete"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <h3>No quotes yet ✨</h3>
+                    <p>Add your first favorite quote!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Add New Quote</h2>
+            <form id="quote-form" method="POST">
+                <input type="hidden" id="quote-id" name="id">
+                <textarea id="text" name="text" placeholder="Write your quote here..." required></textarea>
+                <input type="text" id="author" name="author" placeholder="Author" required>
+                <input type="text" id="category" name="category" placeholder="Category" value="General">
+                <input type="text" id="tags" name="tags" placeholder="Tags (comma separated)">
+                <div class="modal-buttons">
+                    <button type="button" onclick="closeModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" id="save-btn" class="btn btn-primary">Save Quote</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/main.js"></script>
+</body>
+</html>
